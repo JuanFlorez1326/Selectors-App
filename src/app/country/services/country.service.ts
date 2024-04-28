@@ -1,4 +1,4 @@
-import { map, Observable, of } from 'rxjs';
+import { combineLatest, map, Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Country, Region, SmallCountry } from '../interfaces/country.interfaces';
@@ -37,5 +37,18 @@ export class CountryService {
         name: country.name.common, cca3: country.cca3, borders: country.borders ?? []
       }))
     );
+  }
+
+  public getCountryBordersByCodes( borders: string[] ): Observable<SmallCountry[]> {
+    if (!borders || borders.length === 0) return of([]);
+
+    const countryRequest: Observable<SmallCountry>[] = [];
+
+    borders.forEach( code => {
+      const request = this.getCountryByAlphaCode(code);
+      countryRequest.push(request);
+    });
+
+    return combineLatest( countryRequest );
   }
 }
