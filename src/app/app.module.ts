@@ -3,6 +3,19 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  {
+    path: 'selectors',
+    loadChildren: () => import('./country/countries.module').then(m => m.CountriesModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'selectors',
+    pathMatch: 'full'
+  }
+]
 
 @NgModule({
   declarations: [
@@ -10,7 +23,8 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    RouterModule.forRoot(routes)
   ],
   providers: [],
   bootstrap: [AppComponent]
